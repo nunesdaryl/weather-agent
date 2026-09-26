@@ -1,4 +1,6 @@
 langchain-azure-ai==1.2.10
+# pre-release dependency of langchain-azure-ai; must be pinned or clean installs fail
+azure-ai-contentunderstanding==1.2.0b3
 langchain==1.4.2
 fastapi==0.141.1
 uvicorn==0.54.0
