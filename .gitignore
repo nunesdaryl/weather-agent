@@ -1,7 +1,7 @@
 # Never commit credentials
 .env
-# This screenshot shows the instructor's API key in plaintext
-Exercise Examples/D3A15E0B-69C3-4429-A997-7F709FE3C225.png
+# Class screenshots: one shows the instructor's API key, the rest show classmates
+Exercise Examples/
 
 # Python
 .venv/
