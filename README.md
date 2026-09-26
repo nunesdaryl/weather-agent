@@ -3,6 +3,8 @@
 FDE course exercise. An AI agent is a language model, a few tools it can call,
 and a loop that runs them until it has an answer.
 
+Repo: https://github.com/nunesdaryl/weather-agent
+
 ```
 React UI  ->  FastAPI      ->  Agent loop      ->  Tool
 App.jsx       POST /api/chat   chat(), max 5       get_weather -> Open-Meteo
@@ -23,6 +25,9 @@ App.jsx       POST /api/chat   chat(), max 5       get_weather -> Open-Meteo
 ## Run it
 
 ```bash
+# 0. get the code
+git clone https://github.com/nunesdaryl/weather-agent.git && cd weather-agent
+
 # 1. fill in .env from the Foundry portal
 cp .env.example .env
 
