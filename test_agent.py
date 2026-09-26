@@ -156,7 +156,28 @@ def test_route_answers_with_json_even_when_the_model_fails(monkeypatch):
     def broken(message, history):
         raise RuntimeError("DeploymentNotFound")
 
-    monkeypatch.setattr(main, "chat", broken)
-    r = TestClient(main.app).post("/api/chat", json={"message": "hi", "history": []})
+    monkeypatch.setitem(main.CHATS, "loop", broken)
+    r = TestClient(main.app).post("/api/chat", json={"message": "hi", "history": [], "impl": "loop"})
     assert r.status_code == 200
     assert r.json()["answer"] == "Error: RuntimeError: DeploymentNotFound"
+
+
+def test_route_sends_each_request_to_the_implementation_it_names(monkeypatch):
+    # The UI's toggle picks the agent per request; both are loaded at once.
+    from fastapi.testclient import TestClient
+
+    import agent
+    import agent_graph
+    import main
+
+    assert main.CHATS == {"loop": agent.chat, "graph": agent_graph.chat}
+
+    monkeypatch.setitem(main.CHATS, "loop", lambda message, history: "from the loop")
+    monkeypatch.setitem(main.CHATS, "graph", lambda message, history: "from the graph")
+    client = TestClient(main.app)
+    for impl, answer in [("loop", "from the loop"), ("graph", "from the graph")]:
+        r = client.post("/api/chat", json={"message": "hi", "history": [], "impl": impl})
+        assert r.json() == {"answer": answer, "impl": impl}
+
+    r = client.post("/api/chat", json={"message": "hi", "impl": "crewai"})
+    assert r.status_code == 422, "unknown implementations are rejected"

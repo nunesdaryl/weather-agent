@@ -16,10 +16,10 @@ App.jsx       POST /api/chat   chat(), max 5       get_weather -> Open-Meteo
 |---|---|
 | `.env` | Azure AI Foundry endpoint, key, deployment name. **Never commit.** |
 | `agent.py` | The tool (`get_weather`), the model, and the agent loop (`chat`). |
-| `main.py` | FastAPI server with one route, `POST /api/chat`, that calls `chat()`. |
-| `frontend/src/App.jsx` | React chat box. Sends the message and history, shows the answer. |
+| `main.py` | FastAPI server with one route, `POST /api/chat`, that calls either agent's `chat()`. |
+| `frontend/src/App.jsx` | React chat box with a LangChain / LangGraph / side-by-side toggle. |
 | `requirements.txt` | langchain-azure-ai, langchain, fastapi, uvicorn, httpx, python-dotenv, pytest |
-| `agent_graph.py` | The same agent on LangGraph (`create_agent`). Selected with `AGENT_IMPL=graph`. |
+| `agent_graph.py` | The same agent on LangGraph (`create_agent`). Picked with the toggle in the UI. |
 | `test_agent.py`, `test_agent_graph.py` | Tests for the tool and both loops. Not part of the exercise. |
 
 ## Run it
@@ -78,8 +78,13 @@ the same tool and system prompt; only the loop is different.
 | `if not reply.tool_calls: return` | the graph ends when the model stops calling tools |
 | append a `ToolMessage` per call | the graph's tool node does it |
 
-Pick one with `AGENT_IMPL=loop` (default) or `AGENT_IMPL=graph` in `.env`.
+The server loads both. The toggle at the top of the chat picks which one answers:
+**LangChain** (the hand-written loop), **LangGraph**, or **Side by side**, which
+sends each question to both so you can compare. Each keeps its own conversation.
 Both give the same answers with the same tool calls.
+
+The API takes the same choice as `"impl": "loop"` or `"impl": "graph"` in the
+request body; without it, `AGENT_IMPL` in `.env` decides (default `loop`).
 
 ## When it breaks
 
