@@ -1,0 +1,17 @@
+# Never commit credentials
+.env
+# This screenshot shows the instructor's API key in plaintext
+Exercise Examples/D3A15E0B-69C3-4429-A997-7F709FE3C225.png
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Node
+node_modules/
+dist/
+
+# macOS
+.DS_Store
